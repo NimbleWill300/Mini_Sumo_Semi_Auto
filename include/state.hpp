@@ -5,8 +5,10 @@
 
 enum State{
   Controller,
-  Square,
-  Circle
+  SquareLeft,
+  SquareRight,
+  RightDodge,
+  LeftDodge
 };
 
 enum ControllerState{

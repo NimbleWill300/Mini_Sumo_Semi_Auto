@@ -7,20 +7,32 @@ int should_change = 0;
 int move_step = 0;
 int change_move_time;
 
-int const num_square_steps = 4;
-int square_attack[num_square_steps][3]{
+int const num_square_left_square_steps = 4;
+int square_left_attack[num_square_left_square_steps][3]{
       {-255, 255, 60},    //vira esquerda
       {255, 255, 150},     //reto
       {255, -255, 120},     //vira direita
       {255, 255, 150}      //ret0
 };
 
-int const num_circle_steps = 4;
-int circle_attack[num_circle_steps][3]{
+int const num_square_right_steps = 4;
+int square_right_attack[num_square_right_steps][3]{
       {255, -255, 60},    //vira direita
       {255, 255, 150},     //reto
       {-255, 255, 120},     //vira esquerda
       {255, 255, 150}      //ret0
+};
+
+int const num_right_dodge_steps = 2;
+int right_dodge[num_right_dodge_steps][3]{
+      {255, -255, 60},      //vira direita
+      {-255, -255, 150}     //ré
+};
+
+int const num_left_dodge_steps = 2;
+int left_dodge[num_left_dodge_steps][3]{
+      {-255,  255, 60},     //vira esquerda
+      {-255, -255, 150}     //ré
 };
 
 void update_state(){
@@ -28,16 +40,28 @@ void update_state(){
     estado = Controller;                          //cancela o movimento e volta ao modo controlado
     return;
   }
-  if(PS4.Square() && estado != Square){           //ataque lateral pela esquerda
-    estado = Square;
+  if(PS4.Square() && PS4.Left() && estado != SquareLeft){           //ataque lateral pela esquerda
+    estado = SquareLeft;
     should_change = 0;
-    change_move_time = millis() + square_attack[0][2];
+    change_move_time = millis() + square_left_attack[0][2];
     move_step = 0;
   }
-  if(PS4.Circle() && estado != Circle){           //ataque lateral pela direita
-    estado = Circle;
+  if(PS4.Square() && PS4.Right() && estado != SquareRight){           //ataque lateral pela direita
+    estado = SquareRight;
     should_change = 0;
-    change_move_time = millis() + circle_attack[0][2];
+    change_move_time = millis() + square_right_attack[0][2];
+    move_step = 0;
+  }
+  if(PS4.Right() && estado != SquareRight && estado != RightDodge){   //Evasiva para direita
+    estado = RightDodge;
+    should_change = 0;
+    change_move_time = millis() + right_dodge[0][2];
+    move_step = 0;
+  }
+  if(PS4.Right() && estado != SquareLeft && estado != LeftDodge){   //Evasiva para esquerda
+    estado = LeftDodge;
+    should_change = 0;
+    change_move_time = millis() + left_dodge[0][2];
     move_step = 0;
   }
   if(PS4.R3() && controllerstate != ProMode){
@@ -63,21 +87,30 @@ void run_state(){
   int num_steps;
   int (*attack)[3];
   switch(estado){
-    case Square:
+    case SquareLeft:
       change_led_color(220, 20, 60);
-      num_steps = num_square_steps;
-      attack = square_attack;
+      num_steps = num_square_left_square_steps;
+      attack = square_left_attack;
       break;
-    case Circle:
+    case SquareRight:
       change_led_color(60, 220, 20);
-      num_steps = num_circle_steps;
-      attack = circle_attack;
+      num_steps = num_square_right_steps;
+      attack = square_right_attack;
+      break;
+    case RightDodge:
+      change_led_color(0, 191, 255);
+      num_steps = num_right_dodge_steps;
+      attack = right_dodge;
+      break;
+    case LeftDodge:
+      change_led_color(102, 205, 170);
+      num_steps = num_left_dodge_steps;
+      attack = left_dodge;
       break;
   }
   
   if(should_change){
     should_change = 0;
-    // Serial.println(move_step);
     if(move_step < num_steps){
       move_step++;
       change_move_time = millis() + attack[move_step][2];
