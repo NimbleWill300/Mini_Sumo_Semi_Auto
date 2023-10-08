@@ -10,6 +10,11 @@ typedef struct{
   int b = 255;
 }LedColors;
 
+enum ControllerState{
+  NormalMode,
+  ProMode
+};
+
 int get_motor_power(side lado);
 
 void set_motor_power(side lado, int valor);

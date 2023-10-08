@@ -6,7 +6,7 @@
 void setup() {
   motor_setup();
   Serial.begin(115200);
-  PS4.begin("2c:dc:d7:39:25:74");
+  PS4.begin("1a:2b:3c:4d:5e:6f");
   Serial.println("Ready.");
   set_state(Controller);
 }

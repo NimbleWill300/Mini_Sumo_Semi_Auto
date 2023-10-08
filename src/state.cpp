@@ -1,7 +1,7 @@
 #include "state.hpp"
 
-State ultimo_estado = estado;
 State estado = Controller;
+State ultimo_estado = estado;
 ControllerState controllerstate = NormalMode;
 int should_change = 0;
 int move_step = 0;
@@ -40,13 +40,13 @@ void update_state(){
     estado = Controller;                          //cancela o movimento e volta ao modo controlado
     return;
   }
-  if(PS4.Square() && PS4.Left() && estado != SquareLeft){           //ataque lateral pela esquerda
+  if(PS4.Square() && PS4.Left() && estado != SquareLeft && estado != LeftDodge){           //ataque lateral pela esquerda
     estado = SquareLeft;
     should_change = 0;
     change_move_time = millis() + square_left_attack[0][2];
     move_step = 0;
   }
-  if(PS4.Square() && PS4.Right() && estado != SquareRight){           //ataque lateral pela direita
+  if(PS4.Square() && PS4.Right() && estado != SquareRight && estado != RightDodge){           //ataque lateral pela direita
     estado = SquareRight;
     should_change = 0;
     change_move_time = millis() + square_right_attack[0][2];
@@ -58,7 +58,7 @@ void update_state(){
     change_move_time = millis() + right_dodge[0][2];
     move_step = 0;
   }
-  if(PS4.Right() && estado != SquareLeft && estado != LeftDodge){   //Evasiva para esquerda
+  if(PS4.Left() && estado != SquareLeft && estado != LeftDodge){   //Evasiva para esquerda
     estado = LeftDodge;
     should_change = 0;
     change_move_time = millis() + left_dodge[0][2];
@@ -76,8 +76,10 @@ void run_state(){
   if(estado == Controller){
     if(controllerstate == NormalMode){
       change_led_color(0, 255, 0);      //Verde
+      // Serial.println("NormalMode");
     }else{
       change_led_color(255, 0, 0);    //Vermelho
+      // Serial.println("ProMode");
     }
     motor_control(LEFT, get_motor_power(RIGHT));
     motor_control(RIGHT, get_motor_power(LEFT));
@@ -91,27 +93,31 @@ void run_state(){
       change_led_color(220, 20, 60);
       num_steps = num_square_left_square_steps;
       attack = square_left_attack;
+      // Serial.println("Square Left");
       break;
     case SquareRight:
       change_led_color(60, 220, 20);
       num_steps = num_square_right_steps;
       attack = square_right_attack;
+      // Serial.println("Square Right");
       break;
     case RightDodge:
       change_led_color(0, 191, 255);
       num_steps = num_right_dodge_steps;
       attack = right_dodge;
+      // Serial.println("Right dodge");
       break;
     case LeftDodge:
       change_led_color(102, 205, 170);
       num_steps = num_left_dodge_steps;
       attack = left_dodge;
+      // Serial.println("Left dodge");
       break;
   }
   
   if(should_change){
     should_change = 0;
-    if(move_step < num_steps){
+    if(move_step + 1< num_steps){
       move_step++;
       change_move_time = millis() + attack[move_step][2];
     }else{

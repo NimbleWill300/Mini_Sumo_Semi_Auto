@@ -11,11 +11,6 @@ enum State{
   LeftDodge
 };
 
-enum ControllerState{
-  NormalMode,
-  ProMode
-};
-
 void update_state();
 
 void run_state();
