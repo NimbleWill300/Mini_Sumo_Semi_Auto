@@ -5,6 +5,7 @@
 #define MAX_MOTOR 255
 #define MOTOR_DEADZONE 20
 
+#define ACCELERATION 2.5
 
 #define EN_B GPIO_NUM_15
 #define BI1 GPIO_NUM_2
@@ -20,8 +21,8 @@ typedef enum {
 } side;
 
 typedef struct motor {
-    uint16_t right;
-    uint16_t left;
+    float right;
+    float left;
 } MotorSpeed;
 
 typedef struct{

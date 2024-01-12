@@ -16,9 +16,9 @@ void loop() {
     update_state();
     run_state();
     
-    Serial.print(get_motor_power(LEFT));
-    Serial.print("\t");
-    Serial.println(get_motor_power(RIGHT));
+    // Serial.print(get_motor_power(LEFT));
+    // Serial.print("\t");
+    // Serial.println(get_motor_power(RIGHT));
   }else{
     motor_control(RIGHT, 0);
     motor_control(LEFT, 0);

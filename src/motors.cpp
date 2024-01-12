@@ -4,6 +4,8 @@
 static MotorSpeed motor_speed;
 
 void motor_setup(){
+    motor_speed.left = 0;
+    motor_speed.right = 0;
     pinMode(EN_B, OUTPUT);
     pinMode(BI1, OUTPUT);
     pinMode(BI2, OUTPUT);
@@ -14,35 +16,54 @@ void motor_setup(){
     digitalWrite(STANDBY, HIGH);
 }
 
-void motor_control(side side, int32_t speed) {
+int limit_value(int speed){
     if (speed > MAX_MOTOR) 
         speed = MAX_MOTOR;
     else if (speed < -MAX_MOTOR)
         speed = -MAX_MOTOR;
+    return speed;
+}
+
+float acceleration(float last_speed, int new_speed){
+    if(new_speed > last_speed){
+        last_speed = last_speed + ACCELERATION;
+    }if(new_speed < last_speed){
+        last_speed = last_speed - ACCELERATION;
+    }if(new_speed = 0){
+        last_speed = 0;
+    }
+    return last_speed;
+}
+
+void motor_control(side side, int32_t speed) {
+    speed = limit_value(speed);
 
     switch (side) {
         case RIGHT:
-            motor_speed.right = speed;
-            if (speed > 0) {
+            motor_speed.right = acceleration(motor_speed.right, speed);
+            Serial.println(motor_speed.right);
+            if (motor_speed.right > 0) {
                 digitalWrite(AI1, HIGH);
                 digitalWrite(AI2, LOW);
-                analogWrite(EN_A, speed);
+                analogWrite(EN_A, motor_speed.right);
             } else{
                 digitalWrite(AI1, LOW);
                 digitalWrite(AI2, HIGH);
-                analogWrite(EN_A, -speed);
+                analogWrite(EN_A, -motor_speed.right);
             }
             break;
         case LEFT:
-            motor_speed.left = speed;
-            if (speed > 0) {
+            motor_speed.left = acceleration(motor_speed.left, speed);
+            Serial.print(motor_speed.left);
+            Serial.print("\t");
+            if (motor_speed.left > 0) {
                 digitalWrite(BI1, LOW);
                 digitalWrite(BI2, HIGH);
-                analogWrite(EN_B, speed);
+                analogWrite(EN_B, motor_speed.left);
             } else{
                 digitalWrite(BI1, HIGH);
                 digitalWrite(BI2, LOW);
-                analogWrite(EN_B, -speed);
+                analogWrite(EN_B, -motor_speed.left);
             }
             break;
         default:

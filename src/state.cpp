@@ -25,14 +25,15 @@ int square_right_attack[num_square_right_steps][3]{
 
 int const num_right_dodge_steps = 2;
 int right_dodge[num_right_dodge_steps][3]{
-      {255, -255, 60},      //vira direita
-      {-255, -255, 150}     //ré
+      {-255,  255, 60},      //vira direita
+      {-255, -255, 100}     //ré
 };
 
-int const num_left_dodge_steps = 2;
+int const num_left_dodge_steps = 3;
 int left_dodge[num_left_dodge_steps][3]{
-      {-255,  255, 60},     //vira esquerda
-      {-255, -255, 150}     //ré
+      { 255, -255, 50},     //vira esquerda
+      {-255,  255, 20},     //vira esquerda
+      {-255, -255, 180}     //ré
 };
 
 void update_state(){
@@ -127,8 +128,8 @@ void run_state(){
     if(millis() < change_move_time){
       set_motor_power(RIGHT, attack[move_step][1]);
       set_motor_power(LEFT,  attack[move_step][0]);
-      motor_control(RIGHT, get_motor_power(LEFT));
       motor_control(LEFT,  get_motor_power(RIGHT));
+      motor_control(RIGHT, get_motor_power(LEFT));
     }else{
       should_change = 1;
     }
