@@ -8,7 +8,9 @@ enum State{
   SquareLeft,
   SquareRight,
   RightDodge,
-  LeftDodge
+  LeftDodge,
+  L1,
+  R1
 };
 
 void update_state();

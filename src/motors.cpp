@@ -3,9 +3,21 @@
 
 static MotorSpeed motor_speed;
 
+MotorDirection motor_direction;
+
+void change_motor_direction(side side, int valor){
+    if(side == RIGHT){
+        motor_direction.right = valor;
+    }else{
+        motor_direction.left = valor;
+    }
+}
+
 void motor_setup(){
     motor_speed.left = 0;
     motor_speed.right = 0;
+    motor_direction.right = 1;
+    motor_direction.left = 1;
     pinMode(EN_B, OUTPUT);
     pinMode(BI1, OUTPUT);
     pinMode(BI2, OUTPUT);
@@ -41,6 +53,7 @@ void motor_control(side side, int32_t speed) {
     switch (side) {
         case RIGHT:
             motor_speed.right = acceleration(motor_speed.right, speed);
+            motor_speed.right = motor_speed.right * motor_direction.right;
             Serial.println(motor_speed.right);
             if (motor_speed.right > 0) {
                 digitalWrite(AI1, HIGH);
@@ -54,6 +67,7 @@ void motor_control(side side, int32_t speed) {
             break;
         case LEFT:
             motor_speed.left = acceleration(motor_speed.left, speed);
+            motor_speed.left = motor_speed.left * motor_direction.left;
             Serial.print(motor_speed.left);
             Serial.print("\t");
             if (motor_speed.left > 0) {

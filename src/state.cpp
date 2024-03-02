@@ -41,6 +41,19 @@ void update_state(){
     estado = Controller;                          //cancela o movimento e volta ao modo controlado
     return;
   }
+  if(PS4.Square() &&PS4.L1() && estado != L1){
+    change_motor_direction(LEFT, 1);
+  }
+  if(PS4.Circle() &&PS4.L1() && estado != L1){
+    change_motor_direction(LEFT, -1);
+  }
+  if(PS4.Square() &&PS4.R1() && estado != R1){
+    change_motor_direction(RIGHT, 1);
+  }
+  if(PS4.Circle() &&PS4.R1() && estado != R1){
+    change_motor_direction(RIGHT, -1);
+  }
+
   if(PS4.Square() && PS4.Left() && estado != SquareLeft && estado != LeftDodge){           //ataque lateral pela esquerda
     estado = SquareLeft;
     should_change = 0;

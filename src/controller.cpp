@@ -1,4 +1,5 @@
 #include "controller.hpp"
+#include "motors.hpp"
 
 LedColors colors;
 Motors motor_power;
@@ -50,11 +51,11 @@ int update_controller(ControllerState state){
     // r2 = calculate_deadZone(r2);     //Como o valor nao varia q nem o joystick 
     // l2 = calculate_deadZone(l2);     //nao vi necessidade de colocar deadZone
     x = calculate_deadZone(x);
-    int speed = r2 - l2;
+    int speed = l2 - r2;
     int mappedX = map(x, -127, 127, -MAX_MOTOR, MAX_MOTOR);
     
-    motor_power.powerRight = speed - mappedX;
-    motor_power.powerLeft  = speed + mappedX;
+    motor_power.powerRight = speed + mappedX;
+    motor_power.powerLeft  = speed - mappedX;
     
   }else{
     int right = 0;
@@ -69,8 +70,8 @@ int update_controller(ControllerState state){
     right = calculate_deadZone(right);
     left = calculate_deadZone(left);
 
-    int mappedRight = map(right, -127, 127, -MAX_MOTOR, MAX_MOTOR);
-    int mappedLeft  = map(left , -127, 127, -MAX_MOTOR, MAX_MOTOR);
+    int mappedRight = map(left, -127, 127, -MAX_MOTOR, MAX_MOTOR);
+    int mappedLeft  = map(right , -127, 127, -MAX_MOTOR, MAX_MOTOR);
     
     motor_power.powerRight = mappedRight;
     motor_power.powerLeft  = mappedLeft;

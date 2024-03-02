@@ -3,10 +3,24 @@
 #include "motors.hpp"
 #include "state.hpp"
 
+// #define pino26 GPIO_NUM_4  // NÃO
+// #define pino27 GPIO_NUM_16 // NÃO
+// #define pino28 GPIO_NUM_17 // NÃO
+// #define pino29 GPIO_NUM_5  // funcionaaa BINARIO KK
+// #define pino30 GPIO_NUM_18 // NÃO
+// #define pino31 GPIO_NUM_19 // NÃO
+
+// #define pino23 GPIO_NUM_15 // 
+// #define pino22 GPIO_NUM_8  // 
+// #define pino21 GPIO_NUM_7  // 
+// #define pino18 GPIO_NUM_10 // 
+// #define pino17 GPIO_NUM_9  // 
+// #define pino16 GPIO_NUM_13 // 
+
 void setup() {
   motor_setup();
   Serial.begin(115200);
-  PS4.begin("1a:2b:3c:4d:5e:6f");
+  PS4.begin("2c:33:7a:a5:9f:56");
   Serial.println("Ready.");
   set_state(Controller);
 }
